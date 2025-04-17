@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -70,7 +71,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 btnOrderWidth = btnOrder.getWidth();
             });
 
+            GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    if (!isSwiped && viewForeground.getTranslationX() == 0f) {
+                        Toast.makeText(context, "Item clicked: " + itemText.getText(), Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+                }
+            });
+
             itemView.setOnTouchListener((v, event) -> {
+                gestureDetector.onTouchEvent(event);
                 float currentX = event.getX();
                 int action = event.getAction();
 
@@ -117,11 +129,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             });
 
 
-            itemView.setOnClickListener(v -> {
-                if (!isSwiped && viewForeground.getTranslationX() == 0f) {
-                    Toast.makeText(context, "Item Clicked: " + itemText.getText(), Toast.LENGTH_SHORT).show();
-                }
-            });
+//            viewForeground.setOnClickListener(v -> {
+//                if (!isSwiped && viewForeground.getTranslationX() == 0f) {
+//                    Toast.makeText(context, "Item clicked: " + itemText.getText(), Toast.LENGTH_SHORT).show();
+//                }
+//            });
 
             btnEdit.setOnClickListener(v -> {
                 Toast.makeText(context, "Edit Clicked: " + itemText.getText(), Toast.LENGTH_SHORT).show();
